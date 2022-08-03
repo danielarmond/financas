@@ -1,6 +1,6 @@
 package br.com.projeto.financas.modelo;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,13 +15,10 @@ public class Despesa {
 	private Long id;
 	private String descricao;
 	private Long valor;
-	private Date data;
+	private LocalDate data;
 	
-	public Despesa(Long id, String descricao, Long valor, Date data) {
-		this.id = id;
-		this.descricao = descricao;
-		this.valor = valor;
-		this.data = data;
+		
+	public Despesa() {
 	}
 
 	public Long getId() {
@@ -48,11 +45,11 @@ public class Despesa {
 		this.valor = valor;
 	}
 
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 	

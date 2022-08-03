@@ -1,27 +1,22 @@
 package br.com.projeto.financas.controller.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.projeto.financas.modelo.Receita;
 
 public class ReceitaDto {
 
-	private Long id;
 	private String descricao;
 	private Long valor;
-	private Date data;
+	private LocalDate data;
 	
 	
 	public ReceitaDto(Receita receita) {
-		this.id = receita.getId();
 		this.descricao = receita.getDescricao();
 		this.valor = receita.getValor();
 		this.data = receita.getData();
-	}
-
-
-	public Long getId() {
-		return id;
 	}
 
 
@@ -35,8 +30,12 @@ public class ReceitaDto {
 	}
 
 
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
+	}
+
+	public static List<ReceitaDto> converter(List<Receita> receitas) {
+		return receitas.stream().map(ReceitaDto::new).collect(Collectors.toList());
 	}
 	
 	
