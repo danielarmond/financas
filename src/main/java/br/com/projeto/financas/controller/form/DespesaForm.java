@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import br.com.projeto.financas.modelo.Receita;
+import br.com.projeto.financas.modelo.Despesa;
 
-public class ReceitaForm {
+public class DespesaForm {
 
 	@NotNull @NotEmpty
 	private String descricao;
@@ -17,6 +17,9 @@ public class ReceitaForm {
 	
 	@NotNull
 	private LocalDate data;
+	
+	public DespesaForm() {
+	}
 
 	public String getDescricao() {
 		return descricao;
@@ -41,11 +44,8 @@ public class ReceitaForm {
 	public void setData(LocalDate data) {
 		this.data = data;
 	}
-
-	public Receita converter() {
-		return new Receita(descricao, valor, data);
+	
+	public Despesa converter() {
+		return new Despesa(descricao, valor, data);
 	}
-	
-	
-	
 }

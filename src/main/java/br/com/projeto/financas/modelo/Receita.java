@@ -17,9 +17,16 @@ public class Receita {
 	private Long valor;
 	private LocalDate data;
 	
+	
 	public Receita() {
 		}
 	
+	public Receita(String descricao, Long valor, LocalDate data) {
+		this.descricao = descricao;
+		this.valor = valor;
+		this.data = data;
+	}
+
 	public Long getId() {
 		return id;
 	}
