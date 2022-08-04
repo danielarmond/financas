@@ -50,10 +50,18 @@ public class ReceitaController {
 	@PostMapping
 	@Transactional
 	public ResponseEntity<ReceitaDto> cadastrar(@RequestBody @Valid ReceitaForm receitaForm, UriComponentsBuilder uriBuilder) {
-		Receita receita = receitaForm.converter();
-		receitaRepository.save(receita);		
-		URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
-		return ResponseEntity.created(uri).body(new ReceitaDto(receita));
+		
+		List<Receita> validacaoReceita = receitaRepository.findByDescricaoAndData(receitaForm.getDescricao(), receitaForm.getData());
+	
+		if(validacaoReceita.isEmpty()) {				
+			Receita receita = receitaForm.converter();
+			receitaRepository.save(receita);		
+			URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
+			return ResponseEntity.created(uri).body(new ReceitaDto(receita));
+		}		
+		else {
+			return ResponseEntity.notFound().build();
+		}	
 }	
 	
 	@PutMapping("/{id}")
@@ -70,7 +78,7 @@ public class ReceitaController {
 	
 	@DeleteMapping("/{id}")
 	@Transactional
-	public ResponseEntity remover(@PathVariable Long id){
+	public ResponseEntity<?> remover(@PathVariable Long id){
 		Optional<Receita> optional = receitaRepository.findById(id);
 		if(optional.isPresent()) {
 			receitaRepository.deleteById(id);
