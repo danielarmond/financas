@@ -50,27 +50,50 @@ public class DespesaController {
 	@PostMapping
 	@Transactional
 	public ResponseEntity<DespesaDto> cadastrar(@RequestBody @Valid DespesaForm despesaForm, UriComponentsBuilder uriBuilder) {
+		
+		List<Despesa> validacaoReceita = despesaRepository.buscaDescricaoEData(
+				despesaForm.getDescricao(),
+				despesaForm.getData().getMonthValue(),
+				despesaForm.getData().getYear());
+	
+		if(validacaoReceita.isEmpty()) {		
 		Despesa despesa = despesaForm.converter();
 		despesaRepository.save(despesa);		
 		URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(despesa.getId()).toUri();
 		return ResponseEntity.created(uri).body(new DespesaDto(despesa));
-}	
-	
+		}		
+		else {
+			return ResponseEntity.notFound().build();
+		}		
+	}
+		
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<DespesaDto> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoDespesaForm atualizacaoDespesaForm){
 		
 		Optional<Despesa> optional = despesaRepository.findById(id);
-		if(optional.isPresent()) {
-			Despesa despesa = atualizacaoDespesaForm.atualizar(id, despesaRepository);
-			return ResponseEntity.ok(new DespesaDto(despesa));
+		if(optional.isPresent()) {			
+			List<Despesa> validacaoReceita = despesaRepository.buscaDescricaoDataId(
+					atualizacaoDespesaForm.getDescricao(),
+					atualizacaoDespesaForm.getData().getMonthValue(),
+					atualizacaoDespesaForm.getData().getYear(),
+					id);		
+			if(validacaoReceita.isEmpty()) {		
+				Despesa despesa = atualizacaoDespesaForm.atualizar(id, despesaRepository);
+				return ResponseEntity.ok(new DespesaDto(despesa));
+			}
+			else {
+				return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.notFound().build();
+		}	
+		else {
+			return ResponseEntity.notFound().build();
+			}
 	}
 	
 	@DeleteMapping("/{id}")
 	@Transactional
-	public ResponseEntity remover(@PathVariable Long id){
+	public ResponseEntity<?> remover(@PathVariable Long id){
 		Optional<Despesa> optional = despesaRepository.findById(id);
 		if(optional.isPresent()) {
 			despesaRepository.deleteById(id);

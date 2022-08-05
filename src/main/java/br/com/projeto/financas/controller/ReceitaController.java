@@ -51,7 +51,10 @@ public class ReceitaController {
 	@Transactional
 	public ResponseEntity<ReceitaDto> cadastrar(@RequestBody @Valid ReceitaForm receitaForm, UriComponentsBuilder uriBuilder) {
 		
-		List<Receita> validacaoReceita = receitaRepository.findByDescricaoAndData(receitaForm.getDescricao(), receitaForm.getData());
+		List<Receita> validacaoReceita = receitaRepository.buscaDescricaoEData(
+				receitaForm.getDescricao(),
+				receitaForm.getData().getMonthValue(),
+				receitaForm.getData().getYear());
 	
 		if(validacaoReceita.isEmpty()) {				
 			Receita receita = receitaForm.converter();
@@ -70,10 +73,22 @@ public class ReceitaController {
 		
 		Optional<Receita> optional = receitaRepository.findById(id);
 		if(optional.isPresent()) {
-			Receita receita = atualizacaoReceitaForm.atualizar(id, receitaRepository);
-			return ResponseEntity.ok(new ReceitaDto(receita));
+			List<Receita> validacaoReceita = receitaRepository.buscaDescricaoDataId(
+					atualizacaoReceitaForm.getDescricao(),
+					atualizacaoReceitaForm.getData().getMonthValue(),
+					atualizacaoReceitaForm.getData().getYear(),
+					id);	
+			if(validacaoReceita.isEmpty()) {			
+				Receita receita = atualizacaoReceitaForm.atualizar(id, receitaRepository);
+				return ResponseEntity.ok(new ReceitaDto(receita));
+			}
+			else {
+				return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.notFound().build();
+		}	
+		else {
+			return ResponseEntity.notFound().build();
+			}
 	}
 	
 	@DeleteMapping("/{id}")

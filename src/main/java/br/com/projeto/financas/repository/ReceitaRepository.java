@@ -1,17 +1,19 @@
 package br.com.projeto.financas.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import br.com.projeto.financas.modelo.Receita;
 
 public interface ReceitaRepository extends JpaRepository<Receita, Long>{
+	
+	@Query(value = "SELECT u FROM Receita u WHERE u.descricao = ?1 AND MONTH (u.data) = ?2 AND YEAR (u.data) = ?3")
+	List<Receita> buscaDescricaoEData(String descricao, int mes, int ano); 
+	
+	@Query(value = "SELECT u FROM Receita u WHERE u.descricao = ?1 AND MONTH (u.data) = ?2 AND YEAR (u.data) = ?3 AND u.id != ?4")
+	List<Receita> buscaDescricaoDataId(String descricao, int mes, int ano, Long id); 		
+	}
 
-	List<Receita> findByDescricao(String descricao);
 
-	List<Receita> findByDescricaoAndData(String descricao, LocalDate data);
-
-
-}
