@@ -51,15 +51,15 @@ public class DespesaController {
 	@Transactional
 	public ResponseEntity<DespesaDto> cadastrar(@RequestBody @Valid DespesaForm despesaForm, UriComponentsBuilder uriBuilder) {
 		
-		List<Despesa> validacaoReceita = despesaRepository.buscaDescricaoEData(
+		List<Despesa> validacaoDespesa = despesaRepository.buscaDescricaoEData(
 				despesaForm.getDescricao(),
 				despesaForm.getData().getMonthValue(),
 				despesaForm.getData().getYear());
 	
-		if(validacaoReceita.isEmpty()) {		
+		if(validacaoDespesa.isEmpty()) {		
 		Despesa despesa = despesaForm.converter();
 		despesaRepository.save(despesa);		
-		URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(despesa.getId()).toUri();
+		URI uri = uriBuilder.path("/despesas/{id}").buildAndExpand(despesa.getId()).toUri();
 		return ResponseEntity.created(uri).body(new DespesaDto(despesa));
 		}		
 		else {
@@ -73,12 +73,12 @@ public class DespesaController {
 		
 		Optional<Despesa> optional = despesaRepository.findById(id);
 		if(optional.isPresent()) {			
-			List<Despesa> validacaoReceita = despesaRepository.buscaDescricaoDataId(
+			List<Despesa> validacaoDespesa = despesaRepository.buscaDescricaoDataId(
 					atualizacaoDespesaForm.getDescricao(),
 					atualizacaoDespesaForm.getData().getMonthValue(),
 					atualizacaoDespesaForm.getData().getYear(),
 					id);		
-			if(validacaoReceita.isEmpty()) {		
+			if(validacaoDespesa.isEmpty()) {		
 				Despesa despesa = atualizacaoDespesaForm.atualizar(id, despesaRepository);
 				return ResponseEntity.ok(new DespesaDto(despesa));
 			}
