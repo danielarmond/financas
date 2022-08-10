@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import br.com.projeto.financas.modelo.Categoria;
 import br.com.projeto.financas.modelo.Despesa;
 
 public class DespesaForm {
@@ -17,6 +18,8 @@ public class DespesaForm {
 	
 	@NotNull
 	private LocalDate data;
+	
+	private Categoria categoria;
 	
 	public DespesaForm() {
 	}
@@ -45,7 +48,17 @@ public class DespesaForm {
 		this.data = data;
 	}
 	
+	
+	
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
 	public Despesa converter() {
-		return new Despesa(descricao, valor, data);
+		return new Despesa(descricao, valor, data, categoria);
 	}
 }

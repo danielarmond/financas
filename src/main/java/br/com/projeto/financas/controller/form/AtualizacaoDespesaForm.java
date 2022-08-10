@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import br.com.projeto.financas.modelo.Categoria;
 import br.com.projeto.financas.modelo.Despesa;
 import br.com.projeto.financas.repository.DespesaRepository;
 
@@ -18,6 +19,8 @@ public class AtualizacaoDespesaForm {
 	
 	@NotNull
 	private LocalDate data;
+	
+	private Categoria categoria;
 	
 	public AtualizacaoDespesaForm() {
 	}
@@ -46,11 +49,22 @@ public class AtualizacaoDespesaForm {
 		this.data = data;
 	}
 	
+	
+	
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
 	public Despesa atualizar(Long id, DespesaRepository despesaRepository) {
 		Despesa despesa = despesaRepository.getReferenceById(id);
 		despesa.setDescricao(this.descricao);
 		despesa.setValor(this.valor);
 		despesa.setData(this.data);
+		despesa.setCategoria(this.categoria);
 		return despesa;
 	}
 }
