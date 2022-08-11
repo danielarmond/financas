@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,9 +34,17 @@ public class ReceitaController {
 	private ReceitaRepository receitaRepository;
 
 	@GetMapping()
-	public List<ReceitaDto> lista(){
-		List<Receita> receitas = receitaRepository.findAll();
-		return ReceitaDto.converter(receitas);
+	public List<ReceitaDto> lista(@RequestParam(required = false) String descricao){
+		
+		if(descricao == null) {
+			List<Receita> receitas = receitaRepository.findAll();
+			return ReceitaDto.converter(receitas);
+		}
+		else {
+			List<Receita> receitas = receitaRepository.buscaDescricao(descricao);
+			return ReceitaDto.converter(receitas);
+			
+		}
 	}
 	
 	@GetMapping("/{id}")
@@ -45,6 +54,12 @@ public class ReceitaController {
 		return ResponseEntity.ok(new ReceitaDto (receita.get()));
 		}
 		return ResponseEntity.notFound().build();
+	}
+	
+	@GetMapping("/{ano}/{mes}")
+	public List<ReceitaDto> listarMes (@PathVariable Integer ano, @PathVariable Integer mes) {
+		List<Receita> receitas = receitaRepository.buscaData(mes, ano);
+		return ReceitaDto.converter(receitas);
 	}
 	
 	@PostMapping

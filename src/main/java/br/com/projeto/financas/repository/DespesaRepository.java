@@ -14,4 +14,10 @@ public interface DespesaRepository extends JpaRepository<Despesa, Long>{
 	
 	@Query(value = "SELECT u FROM Despesa u WHERE u.descricao = ?1 AND MONTH (u.data) = ?2 AND YEAR (u.data) = ?3 AND u.id != ?4")
 	List<Despesa> buscaDescricaoDataId(String descricao, int mes, int ano, Long id); 
+	
+	@Query(value = "SELECT u FROM Despesa u WHERE MONTH (u.data) = ?1 AND YEAR (u.data) = ?2")
+	List<Despesa> buscaData(Integer mes, Integer ano);
+	
+	@Query(value = "SELECT u FROM Despesa u WHERE u.descricao = ?1")
+	List<Despesa> buscaDescricao(String descricao);
 }

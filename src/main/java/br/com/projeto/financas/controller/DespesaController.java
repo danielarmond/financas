@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,9 +34,16 @@ public class DespesaController {
 	private DespesaRepository despesaRepository;
 
 	@GetMapping()
-	public List<DespesaDto> lista(){
-		List<Despesa> despesas = despesaRepository.findAll();
-		return DespesaDto.converter(despesas);
+	public List<DespesaDto> lista(@RequestParam(required = false) String descricao){
+		
+		if(descricao == null) {
+			List<Despesa> despesas = despesaRepository.findAll();
+			return DespesaDto.converter(despesas);
+		}
+		else{
+			List<Despesa> despesas = despesaRepository.buscaDescricao(descricao);
+			return DespesaDto.converter(despesas);
+		}
 	}
 	
 	@GetMapping("/{id}")
@@ -46,6 +54,13 @@ public class DespesaController {
 		}
 		return ResponseEntity.notFound().build();
 	}
+	
+	@GetMapping("/{ano}/{mes}")
+	public List<DespesaDto> listarMes (@PathVariable Integer ano, @PathVariable Integer mes) {
+		List<Despesa> despesas = despesaRepository.buscaData(mes, ano);
+		return DespesaDto.converter(despesas);
+	}
+		
 	
 	@PostMapping
 	@Transactional
