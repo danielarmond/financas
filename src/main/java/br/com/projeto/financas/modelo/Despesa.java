@@ -19,7 +19,7 @@ public class Despesa {
 	private Long valor;
 	private LocalDate data;
 	@Enumerated(EnumType.STRING)
-	private Categoria categoria = Categoria.OUTRAS;
+	private Categoria categoria;
 	
 		
 	public Despesa() {
@@ -29,7 +29,12 @@ public class Despesa {
 		this.descricao = descricao;
 		this.valor = valor;
 		this.data = data;
-		this.categoria = categoria;
+		if(categoria != null) {
+			this.categoria = categoria;
+		}
+		else {
+			this.categoria = Categoria.OUTRAS;
+		}
 	}
 
 
